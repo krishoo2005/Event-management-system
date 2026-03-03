@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Event Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#0f2027;
+color:white;
+text-align:center;
+}
+
+*{transition:0.3s ease-in-out;}
+
+.mainTitle{
+margin-top:80px;
+font-size:40px;
+font-weight:bold;
+color:#00ffcc;
+}
+
+.navbar{
+display:none;
+background:#111;
+padding:15px;
+position:sticky;
+top:0;
+}
+.navbar button{
+background:none;
+border:none;
+color:white;
+margin:10px;
+font-size:16px;
+cursor:pointer;
+}
+.navbar button:hover{color:#00ffcc;}
+
+.section{
+display:none;
+padding:40px;
+}
+
+input{
+padding:10px;
+margin:10px;
+width:250px;
+border:none;
+border-radius:5px;
+}
+button{
+padding:10px 20px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+background:#00ffcc;
+margin:5px;
+}
+button:hover{background:#00ccaa;}
+
+.card{
+background:rgba(255,255,255,0.1);
+padding:20px;
+margin:20px auto;
+width:350px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,0,0,0.5);
+backdrop-filter:blur(10px);
+}
+.card img{width:100%;border-radius:10px;}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginSection" class="section" style="display:block;">
+<div class="mainTitle">EVENT MANAGEMENT SYSTEM</div>
+<h2>Login</h2>
+<input type="text" id="loginUser" placeholder="Email"><br>
+<input type="password" id="loginPass" placeholder="Password"><br>
+<button onclick="login()">Login</button>
+<p onclick="showRegister()" style="cursor:pointer;">Register</p>
+<p onclick="showAdminLogin()" style="cursor:pointer;color:#00ffcc;">Admin Login</p>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="adminLoginSection" class="section">
+<h2>Admin Login</h2>
+<input type="text" id="adminEmail" placeholder="Email"><br>
+<input type="password" id="adminPass" placeholder="Password"><br>
+<input type="password" id="adminPin" placeholder="Enter PIN"><br>
+<button onclick="adminLogin()">Login</button>
+<button onclick="showLogin()">Back</button>
+</div>
+
+<!-- REGISTER -->
+<div id="registerSection" class="section">
+<h2>Register</h2>
+<input type="text" id="regUser" placeholder="Email"><br>
+<input type="password" id="regPass" placeholder="Password"><br>
+<button onclick="register()">Register</button>
+<button onclick="showLogin()">Back</button>
+</div>
+
+<!-- NAVBAR -->
+<div class="navbar" id="navbar">
+<button onclick="showSection('home')">Home</button>
+<button onclick="showSection('upcoming Events')">Upcoming</button>
+<button onclick="showSection('past Events')">Past Events</button>
+<button onclick="showSection('myEvents')">My Events</button>
+<button onclick="showSection('payment')">Payment</button>
+<button onclick="logout()">Logout</button>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="section">
+<h2>Admin Dashboard</h2>
+<div id="adminStats"></div>
+<div id="adminData"></div>
+<button onclick="logout()">Logout</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="section">
+<h1>Welcome to Event Management</h1>
+<p>Book Your Favorite Events Easily</p>
+</div>
+
+<!-- UPCOMING -->
+<div id="upcoming Events" class="section">
+<h2>Upcoming Events</h2>
+<img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=400&q=60">
+<div class="card">
+<h3>Cricket Tournament</h3>
+<p>₹100 | 10 March | Pune</p>
+<button onclick="bookEvent('Cricket Tournament',100)">Book</button>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1200&q=80">
+<h3>Football Tournament</h3>
+<p>₹100 | 15 March | Pune</p>
+<button onclick="bookEvent('Cricket Tournament',50)">Book</button>
+</div>
+
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2">
+<h3>music league</h3>
+<p>₹100 | 18 March | chh sambhajinagar</p>
+<button onclick="bookEvent('music',100)">Book</button>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1594737625785-9069c49a5eca?auto=format&fit=crop&w=500&q=80">
+<h3>Badminton  </h3>
+<p>₹100 | 20 March | jalna </p>
+<button onclick="bookEvent('Badminton',150)">Book</button>
+</div>
+</div>
+
+
+<!-- PAST EVENTS -->
+<div id="past Events" class="section">
+<h2>Past Events</h2>
+<div class="card">
+<img src="https://images.pexels.com/photos/209684/pexels-photo-209684.jpeg">
+<h3>carrom match</h3>
+</div>
+
+<div class="card">
+<img src="https://images.pexels.com/photos/17954207/pexels-photo-17954207.jpeg">
+<h3>long jump</h3>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1587162904238-23a281cdb4d6?auto=format&fit=crop&w=400&q=80" alt="Singing Performance">
+<h3>singing league</h3>
+</div>
+</div>
+
+
+<!-- MY EVENTS -->
+<div id="myEvents" class="section">
+<h2>My Events</h2>
+<div id="myEventList"></div>
+<p>Total: ₹<span id="totalAmount">0</span></p>
+</div>
+
+<!-- PAYMENT -->
+<div id="payment" class="section">
+<h2>Payment</h2>
+<p>Pending Amount: ₹<span id="paymentTotal">0</span></p>
+<button onclick="makePayment()">Pay Now</button>
+<div id="receiptBox"></div>
+</div>
+
+<script>
+let users=JSON.parse(localStorage.getItem("users"))||[];
+let bookings=JSON.parse(localStorage.getItem("bookings"))||[];
+let currentUser=localStorage.getItem("currentUser");
+let total=0;
+
+if(currentUser) showWebsite();
+
+function hideAll(){
+document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+navbar.style.display="none";
+}g
+
+function showSection(id){
+document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+document.getElementById(id).style.display="block";
+if(id=="myEvents" || id=="payment") loadMyEvents();
+}
+
+function showWebsite(){
+hideAll();
+navbar.style.display="block";
+showSection("home");
+}
+
+function showLogin(){hideAll();loginSection.style.display="block";}
+function showRegister(){hideAll();registerSection.style.display="block";}
+function showAdminLogin(){hideAll();adminLoginSection.style.display="block";}
+
+function register(){
+users.push({email:regUser.value,password:regPass.value});
+localStorage.setItem("users",JSON.stringify(users));
+alert("Registered Successfully");
+showLogin();
+}
+
+function login(){
+let found=users.find(u=>u.email==loginUser.value && u.password==loginPass.value);
+if(found){
+localStorage.setItem("currentUser",loginUser.value);
+currentUser=loginUser.value;
+showWebsite();
+}else alert("Invalid Credentials");
+}
+
+function adminLogin(){
+if(adminEmail.value=="admin@gmail.com" && adminPass.value=="password" && adminPin.value=="1234"){
+hideAll();
+adminPanel.style.display="block";
+loadAdminData();
+}else alert("Wrong Admin Credentials");
+}
+
+function logout(){
+localStorage.removeItem("currentUser");
+location.reload();
+}
+
+function bookEvent(name,price){
+if(bookings.find(b=>b.user==currentUser && b.event==name)){
+alert("Already Booked");return;}
+bookings.push({user:currentUser,event:name,price:price,paid:false});
+localStorage.setItem("bookings",JSON.stringify(bookings));
+alert("Event Booked");
+}
+
+function loadMyEvents(){
+myEventList.innerHTML="";
+total=0;
+bookings.filter(b=>b.user==currentUser).forEach(b=>{
+if(!b.paid) total+=b.price;
+myEventList.innerHTML+=`
+<div class="card">
+<h3>${b.event}</h3>
+<p>₹${b.price}</p>
+<p>Status: ${b.paid?"Paid":"Unpaid"}</p>
+</div>`;
+});
+totalAmount.innerText=total;
+paymentTotal.innerText=total;
+}
+
+function makePayment(){
+let unpaid=bookings.filter(b=>b.user==currentUser && !b.paid);
+if(unpaid.length==0){alert("No pending payments");return;}
+
+let paymentID="PAY"+Math.floor(Math.random()*100000);
+let date=new Date().toLocaleString();
+let paidAmount=0;
+
+unpaid.forEach(b=>{paidAmount+=b.price; b.paid=true;});
+localStorage.setItem("bookings",JSON.stringify(bookings));
+
+receiptBox.innerHTML=`
+<div class="card" id="receipt">
+<h3>Payment Receipt</h3>
+<p><strong>User:</strong> ${currentUser}</p>
+<p><strong>Payment ID:</strong> ${paymentID}</p>
+<p><strong>Date:</strong> ${date}</p>
+<p><strong>Total Paid:</strong> ₹${paidAmount}</p>
+<p><strong>Status:</strong> Successful</p>
+<button onclick="downloadReceipt('${paymentID}','${date}',${paidAmount})">Download Receipt</button>
+<button onclick="window.print()">Print</button>
+</div>`;
+loadMyEvents();
+}
+
+function downloadReceipt(paymentID,date,amount){
+let content = `
+EVENT MANAGEMENT RECEIPT
+----------------------------
+User: ${currentUser}
+Payment ID: ${paymentID}
+Date: ${date}
+Total Paid: ₹${amount}
+Status: Successful
+----------------------------
+Thank You!
+`;
+
+let blob = new Blob([content], { type: "text/plain" });
+let link = document.createElement("a");
+link.href = URL.createObjectURL(blob);
+link.download = "Receipt_"+paymentID+".txt";
+link.click();
+}
+
+function loadAdminData(){
+adminData.innerHTML="";
+let totalEnroll=bookings.length;
+let totalUsers=new Set(bookings.map(b=>b.user)).size;
+let totalFees=bookings.filter(b=>b.paid).reduce((sum,b)=>sum+b.price,0);
+
+adminStats.innerHTML=`
+<div class="card">
+<p><strong>Total Enrollments:</strong> ${totalEnroll}</p>
+<p><strong>Total Users:</strong> ${totalUsers}</p>
+<p><strong>Total Fees Collected:</strong> ₹${totalFees}</p>
+</div>`;
+}
+</script>
+
+</body>
+</html>
